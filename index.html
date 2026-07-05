@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NWG Diagnostic Tool Analysis JS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div>
+            <h1>NWG Diagnostic Tool Analysis</h1>
+            <p id="headerStatus">No data loaded</p>
+        </div>
+        <div class="header-actions">
+            <button id="saveSetupButton" type="button" class="setup-save-button is-clean">Save Setup</button>
+            <button id="downloadSetupButton" type="button" class="secondary-action">Download Setup</button>
+            <button id="uploadSetupButton" type="button" class="secondary-action">Upload Setup</button>
+            <input id="uploadSetupInput" type="file" accept="application/json,.json" hidden>
+            <button id="resetWorkspaceButton" type="button" class="danger-action">Reset</button>
+        </div>
+    </header>
+
+    <div id="loadingOverlay" class="loading-overlay" hidden>
+        <div class="loading-card">
+            <div class="spinner" aria-hidden="true"></div>
+            <div>
+                <strong id="loadingLabel">Working</strong>
+                <p id="loadingDetail">Preparing...</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="app-shell">
+        <nav class="board-nav" aria-label="Diagnostic analysis sections">
+            <button class="board-tab is-active" type="button" data-tab-target="setupTab">Setup and Data Staging</button>
+            <button class="board-tab" type="button" data-tab-target="knowledgeMapTab">Knowledge Map</button>
+            <button class="board-tab" type="button" data-tab-target="datasetsTab">Datasets</button>
+            <button class="board-tab" type="button" data-tab-target="impliedScoringTab">Implied Scoring</button>
+            <button class="board-tab" type="button" data-tab-target="raschTab">Rasch Analysis</button>
+            <button class="board-tab" type="button" data-tab-target="curriculumTab">Curriculum Groups</button>
+            <button class="board-tab" type="button" data-tab-target="validationTab">KM Validation</button>
+            <button class="board-tab" type="button" data-tab-target="trackerTab">Attempt Tracker</button>
+        </nav>
+
+        <section id="setupTab" class="tab-panel is-active"></section>
+        <section id="knowledgeMapTab" class="tab-panel"></section>
+        <section id="datasetsTab" class="tab-panel"></section>
+        <section id="impliedScoringTab" class="tab-panel"></section>
+        <section id="raschTab" class="tab-panel"></section>
+        <section id="curriculumTab" class="tab-panel"></section>
+        <section id="validationTab" class="tab-panel"></section>
+        <section id="trackerTab" class="tab-panel"></section>
+    </main>
+
+    <div id="floatingDictionary" class="floating-panel" hidden>
+        <div class="floating-titlebar">
+            <strong>KM Dictionary</strong>
+            <div>
+                <button id="downloadDictionaryCsvButton" type="button" class="tiny-button">CSV</button>
+                <button id="downloadDictionaryJsonButton" type="button" class="tiny-button">JSON</button>
+                <button id="closeDictionaryButton" type="button" class="tiny-button">Close</button>
+            </div>
+        </div>
+        <div class="floating-body">
+            <div id="dictionaryTableHost"></div>
+        </div>
+    </div>
+
+    <div id="graphModal" class="modal" hidden>
+        <div class="modal-bar">
+            <strong id="graphModalTitle">Knowledge Map</strong>
+            <button id="closeGraphModalButton" type="button" class="secondary-action">Close</button>
+        </div>
+        <div id="graphModalHost" class="modal-body"></div>
+    </div>
+
+    <div id="setupPreviewModal" class="modal" hidden>
+        <div class="modal-bar">
+            <strong>Upload Setup Preview</strong>
+            <div class="button-row">
+                <button id="confirmUploadSetupButton" type="button">Load Setup</button>
+                <button id="cancelUploadSetupButton" type="button" class="secondary-action">Cancel</button>
+            </div>
+        </div>
+        <div class="modal-body setup-preview-body">
+            <div id="setupPreviewHost"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

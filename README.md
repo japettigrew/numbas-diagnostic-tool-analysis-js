@@ -1,48 +1,114 @@
-# NWG Diagnostic Tool Analysis JS
+# Numbas Diagnostic Tool Analysis JS
 
-This is the JavaScript version of the diagnostic analysis app.
+This is a browser-based JavaScript app for analysing Numbas diagnostic test data.
 
-It does not call a local R executable, Rscript, R.exe, or external diagnostic-tool R source file. Source paths are staged in the Setup and Data Staging tab. A small local PHP bridge reads those source files from disk, then the diagnostic calculations run in JavaScript in the browser.
+It does not require R, Rscript, R.exe, or a separate diagnostic-tool R source file. The knowledge map, datasets, implied scoring, curriculum-group summaries, KM validation, attempt tracker, and browser-native Rasch outputs are generated in JavaScript.
 
-## Run Locally
+## What You Need
 
-From `~/codex-test`, run:
+- A modern browser such as Chrome, Edge, Firefox, or Safari.
+- PHP, if you want to run the app locally and allow typed local file paths such as `C:\...`, `\\wsl$...`, or `/home/...`.
+
+PHP is used only as a tiny local file bridge and web server. It does not run the analysis calculations.
+
+## Quick Start on Windows
+
+1. Install PHP for Windows if it is not already installed.
+2. Download or clone this repository.
+3. Open the app folder.
+4. Double-click `start_app.bat`.
+5. Keep the terminal window open while using the app.
+
+The app opens at:
+
+```text
+http://127.0.0.1:8010/
+```
+
+If port `8010` is already in use, edit `start_app.bat` and change the `PORT` value.
+
+## Quick Start on macOS or Linux
+
+Install PHP using your usual package manager, then run this from the app folder:
 
 ```bash
-php -S 127.0.0.1:8002 -t NumeracyWorkingGroup/DiagnosticToolProject/Analysis/DiagnosticToolWebsiteJS
+sh start_app.sh
+```
+
+The app opens at:
+
+```text
+http://127.0.0.1:8010/
+```
+
+If port `8010` is already in use:
+
+```bash
+PORT=8011 sh start_app.sh
+```
+
+## Manual Local Server Method
+
+From the app folder, run:
+
+```bash
+php -S 127.0.0.1:8010 -t .
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:8002/
+http://127.0.0.1:8010/
 ```
 
-## Source Files
+Keep the terminal window open. Stop the server with `Ctrl+C`.
 
-Use the Setup and Data Staging tab to select:
+## Using Source Files
 
-- Attempt data JSON file or files, one full path per line
-- Numbas diagnostic `.exam` file, full path including filename
-- Optional GEXF knowledge map, full path including filename
+In the Setup and Data Staging tab, provide:
 
-The local PHP bridge lets the app read typed paths such as `C:\...`, `\\wsl$...`, and `/home/...` when the files are readable from the machine running the local server. If the app is opened from a static server instead, local filesystem paths will not import.
+- Attempt data JSON file or files.
+- A Numbas diagnostic `.exam` file.
+- Optionally, a GEXF knowledge map.
+
+When running locally with PHP, you can type full paths such as:
+
+```text
+C:\Data\attempts.json
+\\wsl$\Ubuntu\home\user\data\exam.exam
+/home/user/data/map.gexf
+```
+
+You can also use the `Choose file(s)` buttons. Browser-chosen files work for the current session, but browsers do not expose reusable full local paths for later sessions.
+
+## Hosted Site Use
+
+If the app is served from a hosted website, the browser cannot read a user's local files from typed local paths. This is a browser security restriction.
+
+For hosted use, either:
+
+- Use the `Choose file(s)` buttons each session.
+- Put the source files somewhere web-accessible and enter `https://...` URLs or relative URLs.
+- Run the app locally with PHP if you want setup files containing local paths to be reusable.
 
 ## Setup Files
 
-`Save Setup` stores the current setup metadata in this browser.
+`Save Setup` stores setup metadata in the current browser.
 
-`Download Setup` creates `diagnostic_tool_setup.json`. It stores the staged source paths and analysis parameters. Uploading this setup restores those paths and parameters so Import Sources can load the data from the staged locations.
+`Download Setup` creates `diagnostic_tool_setup.json`. It stores source paths or URLs and analysis parameters. It does not store the full contents of large attempt JSON files.
 
-## Current Analysis Coverage
+Uploading a setup file restores the paths/URLs and parameters. Import succeeds only if those paths/URLs are readable in the current environment.
 
-The JavaScript app currently runs these stages in the browser:
+## Analysis Coverage
 
-- Knowledge map and KM dictionary construction
-- Attempt Dataset construction
-- Implied scoring
-- Curriculum-group summaries
-- KM validation and Attempt Tracker data
-- Browser-native dichotomous 1PL marginal maximum likelihood Rasch analysis for raw and implied score matrices
+The JavaScript app currently supports:
 
-The Rasch implementation targets the `TAM::tam.mml(resp = response)` dichotomous 1PL use case used by the original app. It generates browser-side CSV/text outputs and interactive Wright-map previews. Further validation against TAM fixtures should continue before treating it as a full replacement for all TAM package behaviour.
+- Knowledge map and KM dictionary construction.
+- Attempt Dataset construction.
+- Implied scoring.
+- Curriculum-group summaries.
+- KM validation.
+- Attempt Tracker visualisation.
+- Browser-native dichotomous 1PL marginal maximum likelihood Rasch analysis for raw and implied score matrices.
+
+The Rasch implementation targets the `TAM::tam.mml(resp = response)` dichotomous 1PL use case used by the original R app. It is not a full port of all TAM behaviour. In particular, boundary/perfect-score items may differ from TAM's finite estimates, so Rasch outputs should continue to be validated against the R/TAM version before high-stakes use.

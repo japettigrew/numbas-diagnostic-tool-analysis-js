@@ -5792,7 +5792,7 @@ function sourceStagingControl(labelText, previewKind) {
     el("div", { class: "source-path-line" }, [
       sourcePathEditor(previewKind),
       sourceFilePicker(previewKind),
-      actionButton("Preview Staged", () => showStagedSourcePreview(previewKind), false, "secondary-action preview-stage-button")
+      actionButton("Preview staged", () => showStagedSourcePreview(previewKind), false, "secondary-action preview-stage-button")
     ])
   ]);
 }

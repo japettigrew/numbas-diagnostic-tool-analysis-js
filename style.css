@@ -264,7 +264,7 @@ textarea {
 
 .source-path-line {
   display: grid;
-  grid-template-columns: minmax(420px, 640px) 170px 132px;
+  grid-template-columns: minmax(420px, 640px) 132px 132px;
   align-items: start;
   gap: 10px;
 }
@@ -291,7 +291,7 @@ textarea.source-path-input {
 .source-file-button {
   min-height: 32px;
   white-space: nowrap;
-  width: 170px;
+  width: 132px;
 }
 
 .compact-param-field {

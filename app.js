@@ -427,17 +427,21 @@ function taskStatusLabel(status) {
 }
 
 function createDashboardTasks() {
-  return createDashboardTasksFor(["km", "datasets", "implied", "curriculum", "finalise", "validation", "rasch"]);
+  return createDashboardTasksFor(["km", "datasets", "implied", "curriculum", "finalise", "validation", "rasch"], { includeTracker: true });
 }
 
-function createDashboardTasksFor(keys) {
+function createDashboardTasksFor(keys, options = {}) {
+  const validationLabel = options.includeTracker ? "KM Validation and Tracker" : "KM Validation";
+  const validationDetail = options.includeTracker
+    ? "Waiting for graph and student sequence outputs."
+    : "Waiting to compare the Numbas-derived graph with the staged GEXF map.";
   const definitions = {
     km: { key: "km", label: "Knowledge Map", status: "pending", percent: 0, detail: "Waiting to parse the exam and build the KM dictionary." },
     datasets: { key: "datasets", label: "Datasets", status: "pending", percent: 0, detail: "Waiting to read attempt data and build the Attempt Dataset." },
     implied: { key: "implied", label: "Implied Scoring", status: "pending", percent: 0, detail: "Waiting to apply implied scoring." },
     curriculum: { key: "curriculum", label: "Curriculum Groups", status: "pending", percent: 0, detail: "Waiting to build curriculum-group summaries." },
     finalise: { key: "finalise", label: "Prepare Browser Output", status: "pending", percent: 0, detail: "Waiting to prepare compact browser output." },
-    validation: { key: "validation", label: "KM Validation and Tracker", status: "pending", percent: 0, detail: "Waiting for graph and student sequence outputs." },
+    validation: { key: "validation", label: validationLabel, status: "pending", percent: 0, detail: validationDetail },
     rasch: { key: "rasch", label: "Rasch Analysis", status: "pending", percent: 0, detail: "Waiting for raw and implied matrices." }
   };
   return keys.map((key) => ({ ...definitions[key] })).filter(Boolean);
@@ -456,7 +460,7 @@ async function buildKnowledgeMapSubset(options = {}) {
     running: true,
     status: "running",
     startedAt: Date.now(),
-    tasks: createDashboardTasksFor(validate ? ["km", "validation"] : ["km"]),
+    tasks: createDashboardTasksFor(validate ? ["km", "validation"] : ["km"], { includeTracker: false }),
     message: validate ? "Building and validating the knowledge map." : "Building the knowledge map."
   };
   renderSetup();
@@ -507,7 +511,7 @@ async function buildDashboard(options = {}) {
     startedAt: Date.now(),
     tasks: createDashboardTasksFor(includeRasch
       ? ["km", "datasets", "implied", "curriculum", "finalise", "validation", "rasch"]
-      : ["km", "datasets", "implied", "curriculum", "finalise", "validation"]),
+      : ["km", "datasets", "implied", "curriculum", "finalise", "validation"], { includeTracker: true }),
     message: includeRasch
       ? "Building all dashboard sections from the imported sources."
       : "Building all non-Rasch dashboard sections from the imported sources."
